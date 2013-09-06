@@ -74,7 +74,7 @@
    nil)
 
 (defn running? [snake]
-  (not (or (lose? @snake) (win? @snake))))
+  (not (or (lose? @snake) (win?))))
 
 (defn game [snake apple]
   (while (running? snake)
