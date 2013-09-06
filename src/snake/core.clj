@@ -11,8 +11,8 @@
 (def w 50)
 (def h 50)
 (def win-score 200)
-(def score (atom 0))        
-(def period (atom 200))
+(def score (ref 0))        
+(def period (ref 200))
 
 (defn create-snake []
   {:body (list [25 25] [26 25] [27 25])
@@ -61,8 +61,8 @@
     (if (eats? @snake @apple)
       (do 
         (ref-set apple (create-apple))
-        (swap! score + 10)
-        (swap! period - 10)
+        (alter score  #(+ % 10))
+        (alter period #(- % 5))
         (alter snake move :grow))
       (alter snake move)))
   nil)
@@ -80,5 +80,3 @@
   (while (running? snake)
     (update-pos snake apple)
     (Thread/sleep @period)))
-
-             
