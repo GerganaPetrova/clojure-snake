@@ -33,5 +33,5 @@
     :title "Snake"
     :key-pressed key-handler
     :setup setup
-    :size [(* 10 h) (* 10 w)]
+    :size [(* 10 h) (* 12 w)]
     :draw draw))

@@ -11,22 +11,15 @@
 (def w 50)
 (def h 50)
 (def win-length 10)
+(def score (atom 0))        
+(def period (atom 200))
 
 (defn create-snake []
-  {:body (list 
-          [1 8]
-          [1 7]
-          [1 6]
-          [1 5]
-          [1 4]
-          [1 3]
-          [1 2]
-          [1 1]
-          )
+  {:body (list [25 25] [26 25] [27 25])
    :dir [0,1]})
 
 (defn create-apple []
-  {:location [(rand-int w), (rand-int h)]})
+  {:location [(rand-nth (range 5 (- w 5))), (rand-nth (range 5 (- h 5)))]})
 
 (defn move [snake & grow]
   (let [body (snake :body)
@@ -39,7 +32,7 @@
     (>= (count body) win-length)))
 
 (defn eat-her-tail? [snake]
-  (some #(= (first (snake :body)) %) (last (snake :body))))
+  (some #(= (first (snake :body)) %) (rest (snake :body))))
 
 (defn hit-wall? [snake]
   (let [head (first (snake :body))]
@@ -67,16 +60,26 @@
 (defn update-pos [snake apple]
   (dosync
     (if (eats? @snake @apple)
-      (do (ref-set apple (create-apple))
-          (println "APPFEL!!!")
-          (alter snake move :grow))
+      (do 
+        (ref-set apple (create-apple))
+        (swap! score + 10)
+        (swap! period - 10)
+        (alter snake move :grow))
       (alter snake move)))
   nil)
 
+(defn reset-game [snake apple]
+  (dosync 
+    (ref-set apple (create-apple))
+    (ref-set snake (create-snake)))
+   nil)
+
+(defn running? [snake]
+  (not (or (lose? @snake) (win? @snake))))
+
 (defn game [snake apple]
-  (while (not (lose? @snake))
-    (println (snake :body))
+  (while (running? snake)
     (update-pos snake apple)
-    (Thread/sleep 200)))
+    (Thread/sleep @period)))
 
              
