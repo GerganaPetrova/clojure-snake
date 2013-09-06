@@ -4,20 +4,29 @@
   [(+ (x 0) (y 0))
    (+ (x 1) (y 1))])
 
-(def left [-1, 0])
-(def right [1, 0])
-(def up [0, 1])
-(def down [0, -1]) 
-(def w 20)
+(def directions {:left  [-1,  0]
+                 :right [ 1,  0]
+                 :up    [ 0, -1]
+                 :down  [ 0,  1]})
+(def w 50)
 (def h 50)
 (def win-length 10)
 
 (defn create-snake []
-  {:body (list [1 4] [1 3] [1 2] [1 1])
+  {:body (list 
+          [1 8]
+          [1 7]
+          [1 6]
+          [1 5]
+          [1 4]
+          [1 3]
+          [1 2]
+          [1 1]
+          )
    :dir [0,1]})
 
 (defn create-apple []
-  {:pos [(rand-int w), (rand-int h)]})
+  {:location [(rand-int w), (rand-int h)]})
 
 (defn move [snake & grow]
   (let [body (snake :body)
@@ -59,12 +68,14 @@
   (dosync
     (if (eats? @snake @apple)
       (do (ref-set apple (create-apple))
+          (println "APPFEL!!!")
           (alter snake move :grow))
       (alter snake move)))
   nil)
 
 (defn game [snake apple]
   (while (not (lose? @snake))
+    (println (snake :body))
     (update-pos snake apple)
     (Thread/sleep 200)))
 
