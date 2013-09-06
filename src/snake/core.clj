@@ -8,12 +8,12 @@
 (def right [1, 0])
 (def up [0, 1])
 (def down [0, -1]) 
-(def w 10)
-(def h 10)
+(def w 20)
+(def h 50)
 (def win-length 10)
 
 (defn create-snake []
-  {:body (list [1,1])
+  {:body (list [1 4] [1 3] [1 2] [1 1])
    :dir [0,1]})
 
 (defn create-apple []
@@ -34,15 +34,13 @@
 
 (defn hit-wall? [snake]
   (let [head (first (snake :body))]
-    (or (> (head 0) w)
-        (> (head 1) h)
-        (< (head 0) 0)
-        (< (head 1) 0))))
+    (or (>= (head 0) w)
+        (>= (head 1) h)
+        (<= (head 0) 0)
+        (<= (head 1) 0))))
 
 (defn lose? [snake]
-  (do
-    (println "luir")
-    (or (hit-wall? snake) (eat-her-tail? snake))))
+  (or (hit-wall? snake) (eat-her-tail? snake)))
 
 (defn eats? [snake apple]
   (let [snake-head (first (snake :body))
@@ -67,8 +65,7 @@
 
 (defn game [snake apple]
   (while (not (lose? @snake))
-    (println "kur")
     (update-pos snake apple)
-    (Thread/sleep 2000)))
+    (Thread/sleep 200)))
 
              

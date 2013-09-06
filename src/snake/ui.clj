@@ -10,19 +10,21 @@
   (frame-rate 1)
   (swap! square (fn [_] (load-image "square.gif"))))
 
-(defn draw-body-part [v]
-  (image @square (v 0) (v 1)))
+(defn body-part [v]
+  (println v)
+  (image @square  (* 10 (v 0)) (* 10 (v 1))))
 
 (defn draw []
   (background 10 100 10)
-  (println (snake :body))
-  (map draw-body-part (snake :body)))
-    
+  ;(println (snake :body))
+  (map body-part (snake :body)))
+   
 (defn -main [] 
-  (do
-    (future (game snake apple))
-    (defsketch snake-skatch
-      :title "Snake"
-      :key-pressed #()
-      :setup setup
-      :draw draw)))
+  (future (game snake apple))
+  (defsketch snake-skatch
+    :title "Snake"
+    :key-pressed #()
+    :setup setup
+    :frame false
+    :on-close shutdown-agents
+    :draw draw))
