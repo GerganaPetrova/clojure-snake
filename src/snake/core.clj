@@ -10,7 +10,7 @@
                  :down  [ 0,  1]})
 (def w 50)
 (def h 50)
-(def win-length 10)
+(def win-score 200)
 (def score (atom 0))        
 (def period (atom 200))
 
@@ -27,9 +27,8 @@
     (assoc snake :body (cons (add-points (first body) dir)
                              (if grow body (butlast body))))))
 
-(defn win? [snake]
-  (let [body (snake :body)]
-    (>= (count body) win-length)))
+(defn win? []
+  (>= @score win-score))
 
 (defn eat-her-tail? [snake]
   (some #(= (first (snake :body)) %) (rest (snake :body))))
@@ -53,7 +52,7 @@
   (assoc snake :dir new-dir))
 
 (defn update-dirs [snake new-dir]
-  (when new-dir 
+  (when (not= (add-points new-dir (snake :dir)) [0 0]) 
     (dosync
       (alter snake turn new-dir))))
 
