@@ -35,9 +35,6 @@
 (defn key-handler []
   (update-dirs snake (directions (key-as-keyword))))
 
-(defn on-close []
-  (println "KUR"))
-
 (defn -main [] 
   (future (game snake apple))
   (defsketch snake-skatch
@@ -45,5 +42,4 @@
     :key-pressed key-handler
     :setup setup
     :size [(* 10 h) (* 11 w)]
-    :on-close on-close
     :draw draw))
